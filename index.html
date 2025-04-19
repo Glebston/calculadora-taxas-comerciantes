@@ -7,12 +7,12 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #1a3950; /* Fundo escuro */
+      background: #f2f2f2;
       padding: 30px;
     }
     .container {
       max-width: 600px;
-      background: #ffffff; /* Fundo branco para o container */
+      background: #fff;
       margin: auto;
       padding: 25px;
       border-radius: 12px;
@@ -21,35 +21,34 @@
     h2 {
       text-align: center;
       margin-bottom: 20px;
-      color: #a1db00; /* Cor vibrante para o título */
+      color: #a1db00;
     }
     label {
       display: block;
       margin-top: 15px;
       font-weight: bold;
-      color: #000000; /* Texto preto para boa legibilidade */
     }
     input, select, button {
       width: 100%;
       padding: 10px;
       margin-top: 5px;
       border-radius: 5px;
-      border: 1px solid #213f55; /* Bordas em tom de azul claro */
+      border: 1px solid #ccc;
     }
     button {
-      background-color: #a1db00; /* Botão verde vibrante */
+      background-color: #a1db00;
       color: white;
       font-size: 16px;
       margin-top: 20px;
       cursor: pointer;
     }
     button:hover {
-      background-color: #6e862d; /* Tom mais escuro de verde ao passar o mouse */
+      background-color: #6e862d;
     }
     .result {
       margin-top: 25px;
-      background-color: #e6ffe6; /* Fundo suave para o resultado */
-      border-left: 5px solid #a1db00; /* Barra de destaque verde */
+      background-color: #e6ffe6;
+      border-left: 5px solid #28a745;
       padding: 15px;
       border-radius: 8px;
     }
@@ -171,4 +170,11 @@
         <strong>Tipo:</strong> ${tipo}<br>
         ${tipo === "Crédito Parcelado" ? `<strong>Parcelas:</strong> ${parcelas}x<br>` : ""}
         <strong>Taxa Aplicada:</strong> ${taxa.toFixed(2)}%<br>
-        <strong>Valor a Receber:</strong> R$ ${valorRece
+        <strong>Valor a Receber:</strong> R$ ${valorReceber.toFixed(2)}
+      `;
+      document.getElementById("resultado").innerHTML = resultado;
+      document.getElementById("resultado").style.display = "block";
+    }
+  </script>
+</body>
+</html>
