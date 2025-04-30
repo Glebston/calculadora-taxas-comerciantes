@@ -34,6 +34,7 @@
       margin-top: 5px;
       border-radius: 5px;
       border: 1px solid #ccc;
+      box-sizing: border-box;
     }
     button {
       background-color: #a1db00;
@@ -51,6 +52,8 @@
       border-left: 5px solid #28a745;
       padding: 15px;
       border-radius: 8px;
+      line-height: 1.6;
+      display: none;
     }
   </style>
 </head>
@@ -59,7 +62,7 @@
     <h2>Calculadora de Taxas</h2>
 
     <label for="valor">Valor da Venda (R$):</label>
-    <input type="number" id="valor" placeholder="Digite o valor da venda" />
+    <input type="text" id="valor" placeholder="0,00" />
 
     <label for="plano">Plano:</label>
     <select id="plano">
@@ -88,91 +91,86 @@
 
     <button onclick="calcularTaxa()">Calcular</button>
 
-    <div class="result" id="resultado" style="display: none;"></div>
+    <div class="result" id="resultado"></div>
   </div>
 
   <script>
     const taxas = {
+      /* ... suas taxas conforme o código anterior ... */
       "Pag Pro": {
-        "Mastercard/Visa": {
-          "Débito": 0.99,
-          "Crédito à Vista": 2.99,
-          "Crédito Parcelado": [6.16, 6.94, 7.70, 8.45, 9.20, 9.94, 10.67, 11.40, 12.12, 12.82, 13.52, 14.22, 14.90, 15.59, 16.26, 16.93, 17.59]
-        },
-        "Elo": {
-          "Débito": 1.10,
-          "Crédito à Vista": 3.20,
-          "Crédito Parcelado": [6.16, 6.94, 7.70, 8.45, 9.20, 9.94, 10.67, 11.40, 12.12, 12.82, 13.52, 14.22, 14.90, 15.59, 16.26, 16.93, 17.59]
-        }
+        "Mastercard/Visa": { "Débito": 0.99, "Crédito à Vista": 2.99, "Crédito Parcelado": [6.16,6.94,7.70,8.45,9.20,9.94,10.67,11.40,12.12,12.82,13.52,14.22,14.90,15.59,16.26,16.93,17.59] },
+        "Elo": { "Débito": 1.10, "Crédito à Vista": 3.20, "Crédito Parcelado": [6.16,6.94,7.70,8.45,9.20,9.94,10.67,11.40,12.12,12.82,13.52,14.22,14.90,15.59,16.26,16.93,17.59] }
       },
       "Pag Super": {
-        "Mastercard/Visa": {
-          "Débito": 1.39,
-          "Crédito à Vista": 2.91,
-          "Crédito Parcelado": [4.49, 5.22, 5.94, 6.66, 7.36, 8.11, 8.81, 9.49, 10.18, 10.85, 11.51, 12.18, 12.83, 13.48, 14.12, 14.76, 15.39]
-        },
-        "Elo": {
-          "Débito": 1.45,
-          "Crédito à Vista": 3.24,
-          "Crédito Parcelado": [4.64, 5.37, 6.09, 6.81, 7.51, 8.31, 9.01, 9.69, 10.38, 11.05, 11.71, 12.38, 13.03, 13.68, 14.32, 14.96, 15.59]
-        }
+        "Mastercard/Visa": { "Débito": 1.39, "Crédito à Vista": 2.91, "Crédito Parcelado": [4.49,5.22,5.94,6.66,7.36,8.11,8.81,9.49,10.18,10.85,11.51,12.18,12.83,13.48,14.12,14.76,15.39] },
+        "Elo": { "Débito": 1.45, "Crédito à Vista": 3.24, "Crédito Parcelado": [4.64,5.37,6.09,6.81,7.51,8.31,9.01,9.69,10.38,11.05,11.71,12.38,13.03,13.68,14.32,14.96,15.59] }
       },
       "Pag Lucro": {
-        "Mastercard/Visa": {
-          "Débito": 1.39,
-          "Crédito à Vista": 2.93,
-          "Crédito Parcelado": [4.27, 5.00, 5.72, 6.44, 7.14, 7.71, 8.41, 9.09, 9.78, 10.45, 11.11, 11.78, 12.43, 13.08, 13.72, 14.36, 14.99]
-        },
-        "Elo": {
-          "Débito": 1.45,
-          "Crédito à Vista": 3.24,
-          "Crédito Parcelado": [4.47, 5.20, 5.92, 6.64, 7.34, 7.91, 8.61, 9.29, 9.98, 10.65, 11.31, 11.98, 12.63, 13.28, 13.92, 14.56, 15.19]
-        }
+        "Mastercard/Visa": { "Débito": 1.39, "Crédito à Vista": 2.93, "Crédito Parcelado": [4.27,5.00,5.72,6.44,7.14,7.71,8.41,9.09,9.78,10.45,11.11,11.78,12.43,13.08,13.72,14.36,14.99] },
+        "Elo": { "Débito": 1.45, "Crédito à Vista": 3.24, "Crédito Parcelado": [4.47,5.20,5.92,6.64,7.34,7.91,8.61,9.29,9.98,10.65,11.31,11.98,12.63,13.28,13.92,14.56,15.19] }
       }
     };
 
-    // Preenche as parcelas de 2x a 18x (já que 1x = crédito à vista)
+    // popula parcelas
     const parcelasSelect = document.getElementById("parcelas");
     for (let i = 2; i <= 18; i++) {
       const opt = document.createElement("option");
-      opt.value = i;
-      opt.textContent = `${i}x`;
+      opt.value = i; opt.textContent = `${i}x`;
       parcelasSelect.appendChild(opt);
     }
 
     function toggleParcelas() {
-      const tipo = document.getElementById("tipo").value;
-      document.getElementById("parcelasDiv").style.display = tipo === "Crédito Parcelado" ? "block" : "none";
+      document.getElementById("parcelasDiv").style.display =
+        document.getElementById("tipo").value === "Crédito Parcelado" ? "block" : "none";
     }
 
+    // formata um número como R$ 1.234,56
+    const formatBRL = value =>
+      new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+
+    // máscara dinâmica para o input
+    const valorInput = document.getElementById('valor');
+    valorInput.addEventListener('input', () => {
+      let digitos = valorInput.value.replace(/\D/g, '');
+      if (!digitos) { valorInput.value = ''; return; }
+      let numero = parseInt(digitos, 10);
+      let cents = numero % 100;
+      let reais = Math.floor(numero / 100);
+      valorInput.value = `${reais.toLocaleString('pt-BR')},${cents.toString().padStart(2,'0')}`;
+    });
+
     function calcularTaxa() {
-      const valor = parseFloat(document.getElementById("valor").value);
+      // converte "1.234,56" → 1234.56
+      const raw = valorInput.value.replace(/\./g, '').replace(',', '.');
+      const valor = parseFloat(raw);
       const plano = document.getElementById("plano").value;
       const bandeira = document.getElementById("bandeira").value;
       const tipo = document.getElementById("tipo").value;
-      let parcelas = tipo === "Crédito Parcelado" ? parseInt(document.getElementById("parcelas").value) : 1;
+      const parcelas = tipo === "Crédito Parcelado"
+        ? parseInt(document.getElementById("parcelas").value)
+        : 1;
 
       if (!valor || valor <= 0) {
         alert("Digite um valor válido.");
         return;
       }
 
-      let taxa;
-      if (tipo === "Crédito Parcelado") {
-        taxa = taxas[plano][bandeira][tipo][parcelas - 2]; // começa do índice 0 na 2ª parcela
-      } else {
-        taxa = taxas[plano][bandeira][tipo];
-      }
+      const taxa = tipo === "Crédito Parcelado"
+        ? taxas[plano][bandeira][tipo][parcelas - 2]
+        : taxas[plano][bandeira][tipo];
 
-      const valorReceber = valor * (1 - taxa / 100);
+      const recebeLiquido = valor * (1 - taxa / 100);
+      const cobraBruto    = valor / (1 - taxa / 100);
 
-      const resultado = `
+      const resultadoEl = document.getElementById("resultado");
+      resultadoEl.innerHTML = `
+        <strong>Valor da Venda:</strong> ${formatBRL(valor)}<br>
         <strong>Tipo:</strong> ${tipo}<br>
         ${tipo === "Crédito Parcelado" ? `<strong>Parcelas:</strong> ${parcelas}x<br>` : ""}
-        <strong>Taxa Aplicada:</strong> ${taxa.toFixed(2)}%<br>
-        <strong>Valor a Receber:</strong> R$ ${valorReceber.toFixed(2)}
+        <strong>Taxa Aplicada:</strong> ${taxa.toFixed(2)}%<br><br>
+        <strong>Você recebe (líquido):</strong> ${formatBRL(recebeLiquido)}<br>
+        <strong>Para repassar a taxa, cobre:</strong> ${formatBRL(cobraBruto)}
       `;
-      document.getElementById("resultado").innerHTML = resultado;
       document.getElementById("resultado").style.display = "block";
     }
   </script>
