@@ -74,7 +74,7 @@
     <label for="bandeira">Bandeira:</label>
     <select id="bandeira">
       <option value="Mastercard/Visa">Mastercard/Visa</option>
-      <option value="Elo">Elo</option>
+      <option value="Elo">Elo/Hiper/Outras</option>
     </select>
 
     <label for="tipo">Tipo de Pagamento:</label>
@@ -96,24 +96,23 @@
 
   <script>
     const taxas = {
-      /* ... suas taxas conforme o código anterior ... */
       "Pag Pro": {
-        "Mastercard/Visa": { "Débito": 0.99, "Crédito à Vista": 2.99, "Crédito Parcelado": [6.16,6.94,7.70,8.45,9.20,9.94,10.67,11.40,12.12,12.82,13.52,14.22,14.90,15.59,16.26,16.93,17.59] },
-        "Elo": { "Débito": 1.10, "Crédito à Vista": 3.20, "Crédito Parcelado": [6.16,6.94,7.70,8.45,9.20,9.94,10.67,11.40,12.12,12.82,13.52,14.22,14.90,15.59,16.26,16.93,17.59] }
+        "Mastercard/Visa": { "Débito": 0.99, "Crédito à Vista": 2.99, "Crédito Parcelado": [6.24, 7.03, 7.81, 8.59, 9.36, 10.12, 10.87, 11.62, 12.36, 13.08, 13.81] },
+        "Elo": { "Débito": 1.10, "Crédito à Vista": 3.20, "Crédito Parcelado": [6.24, 7.03, 7.81, 8.59, 9.36, 10.12, 10.87, 11.62, 12.36, 13.08, 13.81] }
       },
       "Pag Super": {
-        "Mastercard/Visa": { "Débito": 1.39, "Crédito à Vista": 2.91, "Crédito Parcelado": [4.49,5.22,5.94,6.66,7.36,8.11,8.81,9.49,10.18,10.85,11.51,12.18,12.83,13.48,14.12,14.76,15.39] },
-        "Elo": { "Débito": 1.45, "Crédito à Vista": 3.24, "Crédito Parcelado": [4.64,5.37,6.09,6.81,7.51,8.31,9.01,9.69,10.38,11.05,11.71,12.38,13.03,13.68,14.32,14.96,15.59] }
+        "Mastercard/Visa": { "Débito": 1.39, "Crédito à Vista": 2.91, "Crédito Parcelado": [4.56, 5.31, 6.06, 6.79, 7.53, 8.30, 9.01, 9.72, 10.42, 11.11, 11.80] },
+        "Elo": { "Débito": 1.45, "Crédito à Vista": 3.24, "Crédito Parcelado": [4.71, 5.46, 6.21, 6.94, 7.68, 8.50, 9.21, 9.92, 10.62, 11.31, 12.00] }
       },
       "Pag Lucro": {
-        "Mastercard/Visa": { "Débito": 1.39, "Crédito à Vista": 2.93, "Crédito Parcelado": [4.27,5.00,5.72,6.44,7.14,7.71,8.41,9.09,9.78,10.45,11.11,11.78,12.43,13.08,13.72,14.36,14.99] },
-        "Elo": { "Débito": 1.45, "Crédito à Vista": 3.24, "Crédito Parcelado": [4.47,5.20,5.92,6.64,7.34,7.91,8.61,9.29,9.98,10.65,11.31,11.98,12.63,13.28,13.92,14.56,15.19] }
+        "Mastercard/Visa": { "Débito": 1.39, "Crédito à Vista": 2.93, "Crédito Parcelado": [4.34, 5.09, 5.84, 6.57, 7.31, 7.90, 8.61, 9.32, 10.02, 10.71, 11.40] },
+        "Elo": { "Débito": 1.45, "Crédito à Vista": 3.24, "Crédito Parcelado": [4.54, 5.29, 6.04, 6.77, 7.51, 8.10, 8.81, 9.52, 10.22, 10.91, 11.60] }
       }
     };
 
     // popula parcelas
     const parcelasSelect = document.getElementById("parcelas");
-    for (let i = 2; i <= 18; i++) {
+    for (let i = 2; i <= 12; i++) { // Ajustado para ir até 12 parcelas
       const opt = document.createElement("option");
       opt.value = i; opt.textContent = `${i}x`;
       parcelasSelect.appendChild(opt);
@@ -167,7 +166,7 @@
         <strong>Valor da Venda:</strong> ${formatBRL(valor)}<br>
         <strong>Tipo:</strong> ${tipo}<br>
         ${tipo === "Crédito Parcelado" ? `<strong>Parcelas:</strong> ${parcelas}x<br>` : ""}
-        <strong>Taxa Aplicada:</strong> ${taxa.toFixed(2)}%<br><br>
+        <strong>Taxa Aplicada:</strong> ${taxa.toFixed(2).replace('.',',')}%<br><br>
         <strong>Você recebe (líquido):</strong> ${formatBRL(recebeLiquido)}<br>
         <strong>Para repassar a taxa, cobre:</strong> ${formatBRL(cobraBruto)}
       `;
